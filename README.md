@@ -47,15 +47,14 @@ CHAR(8) → "HAMJA "
 VARCHAR(8) → "HAMJA"    [VARCHAR ব্যবহার করাটা ভালো কারণ space waste হয় না।]
 ```
 ## Q4: PostgreSQL-এ Primary Key এবং Foreign Key কী?
-***Primary Key**:
+***Primary Key:**
 Primary Key হলো এমন একটি কলাম বা কলামের কম্বিনেশন, যা ডাটাবেইজ এর একটি টেবিলের প্রতিটি রেকর্ডকে ইউনিকভাবে চিহ্নিত করে। এটি কোনোভাবেই null বা duplicate হতে পারে না। প্রতিটি টেবিলে একটিমাত্র Primary Key থাকতে পারে এবং এর মাধ্যমে ডেটার ভিন্নতা ও ইউনিকনেস বজায় রাখা হয়। Primary Key ব্যবহার করে একটি ডেটাবেজ এ বুঝতে পারে যায় কোন রেকর্ডটি কাকে ইউনিকলি আইডেনটিফাই করে।
 
-***Foreign Key**:
+***Foreign Key:**
 Foreign Key হলো এমন একটি কলাম যা অন্য একটি টেবিলের Primary Key-এর সাথে সম্পর্ক তৈরি করে। এটি দুটি টেবিলের মধ্যে সংযোগ (relationship) স্থাপন করে এবং ডেটার ইন্টিগ্রিটি বজায় রাখে। অর্থাৎ, Foreign Key টেবিলের কোনো মান যেন অন্য টেবিলের নির্দিষ্ট ভ্যালুর সঙ্গে মিলে, সেটা নিশ্চিত করে। Foreign Key-এর মান অবশ্যই ঐ টেবিলে থাকা Primary Key-এর কোনো একটি ভ্যালুর সাথে ম্যাচ করতে হবে, অথবা NULL হতে পারে এবং একাধিক Foreign Key একই টেবিলে থাকতে পারে।
-***Example**:
+***Example:**
 
-```sql
-Copy
+```
 -- departments table
 CREATE TABLE departments (
   dept_id SERIAL PRIMARY KEY,       -- Primary Key
@@ -69,4 +68,22 @@ CREATE TABLE employees (
   dept_id INTEGER,                  -- Foreign Key
   FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
 );
+```
+
+## Q5: SELECT স্টেটমেন্টে WHERE ক্লজের কাজ কী?
+PostgresSQL এর অন্যতম এবং সবচেয়ে বেশি ব্যবহার করা হয় SELECT স্টেটমেন্ট। বিভিন্ন ধরনের এবং বড় ডাটাবেইজ থেকে এই স্টেটমেন্ট ব্যবহার করে খুব সহজেই ডাটা ফিল্টার করে নির্দিষ্ট ডাটা আনা যায়। আর এই কাজটাই ডেভেলপাররা করে থাকেন WHERE ক্লজ SELECT স্টেটমেন্টে ব্যবহারের দ্বারা। WHERE ক্লজ একটি SQL স্টেটমেন্টে ব্যবহার করা হয় নির্দিষ্ট শর্ত অনুযায়ী ডেটা ফিল্টার করতে। যখন কোনো টেবিল থেকে ডেটা SELECT করতে হয়, তখন WHERE ক্লজ ব্যবহার করে শর্ত দেওয়া যায়। যার মাধ্যমে শুধু সেইসব রেকর্ড দেখানো হয় যেগুলো সেই শর্ত পূরণ করে। এটি খুবই প্রয়োজনীয়, যখন টেবিল বড় হয় এবং সব ডেটা না দেখিয়ে নির্দিষ্ট ডেটা দেখতে হয়। এছাড়াও WHERE ক্লজের মাধ্যমে বিভিন্ন কন্ডিশনাল (AND, OR, LIKE, IN) ইত্যাদি অপারেটর ব্যবহার করে আরও নির্ভুলভাবে ডেটা খোঁজা যায়। এটি অনেক গুরুত্বপূর্ণ, কারণ অনেক সময় ডেটাবেজে হাজার হাজার রেকর্ড থাকতে পারে। তখন পুরো টেবিল দেখতে সময় ও রিসোর্স নষ্ট হয়।
+
+***Example:**
+```
+SELECT * FROM students
+WHERE roll = 5;
+
+SELECT name, marks FROM students
+WHERE marks > 50;
+
+SELECT * FROM  students
+WHERE course = ‘CSE’  AND marks >80 ;
+
+SELECT * FROM students
+WHERE class = '10' OR class = '12';
 ```
